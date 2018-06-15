@@ -14,6 +14,7 @@ circle-ci = { repository = "tendermint/kms" }
 
 [dependencies]
 bincode = "1"
+byteorder = "1"
 clear_on_drop = "0.2"
 failure = "0.1"
 failure_derive = "0.1"

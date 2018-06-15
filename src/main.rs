@@ -1,5 +1,6 @@
 //! Key Management System for Cosmos Validators
 
+extern crate byteorder;
 extern crate clear_on_drop;
 extern crate failure;
 #[macro_use]
@@ -40,6 +41,7 @@ mod error;
 mod client;
 mod config;
 mod ed25519;
+mod hchacha20;
 mod rpc;
 mod session;
 mod types;
