@@ -18,9 +18,14 @@ extern crate signatory;
 extern crate toml;
 #[macro_use]
 extern crate serde_json;
+extern crate byteorder;
 extern crate bytes;
 extern crate chrono;
 extern crate hex;
+extern crate hkdf;
+extern crate ring;
+extern crate sha2;
+extern crate x25519_dalek;
 
 use gumdrop::Options;
 use simplelog::Config as LoggingConfig;
@@ -40,7 +45,9 @@ mod error;
 mod client;
 mod config;
 mod ed25519;
+mod hkdfchachapoly;
 mod rpc;
+mod secret_connection;
 mod session;
 mod types;
 
