@@ -3,8 +3,9 @@
 mod kdf;
 mod nonce;
 mod public_key;
+mod transcript_hash;
 
-pub use self::{kdf::Kdf, nonce::Nonce, public_key::PublicKey};
+pub use self::{kdf::Kdf, nonce::Nonce, public_key::PublicKey, transcript_hash::TranscriptHash};
 use crate::{amino_types::AuthSigMessage, error::Error};
 use byteorder::{ByteOrder, LE};
 use bytes::BufMut;
@@ -51,6 +52,8 @@ impl<IoHandler: Read + Write + Send + Sync> SecretConnection<IoHandler> {
         local_pubkey: &PublicKey,
         local_privkey: &dyn Signer<ed25519::Signature>,
     ) -> Result<SecretConnection<IoHandler>, Error> {
+
+        let mut transcript_hash = TranscriptHash::init();
         // Generate ephemeral keys for perfect forward secrecy.
         let (local_eph_pubkey, local_eph_privkey) = gen_eph_keys();
 
@@ -64,14 +67,19 @@ impl<IoHandler: Read + Write + Send + Sync> SecretConnection<IoHandler> {
 
         // Sort by lexical order.
         let local_eph_pubkey_bytes = *local_eph_pubkey.as_bytes();
-        let (low_eph_pubkey_bytes, _) =
+        let (low_eph_pubkey_bytes, hi_eph_pubkeuy_bytes) =
             sort32(local_eph_pubkey_bytes, *remote_eph_pubkey.as_bytes());
+
+        transcript_hash.update(&low_eph_pubkey_bytes);
+        transcript_hash.update(&hi_eph_pubkeuy_bytes);
+        transcript_hash.update(shared_secret.as_bytes());
+
 
         // Check if the local ephemeral public key
         // was the least, lexicographically sorted.
         let loc_is_least = local_eph_pubkey_bytes == low_eph_pubkey_bytes;
 
-        let kdf = Kdf::derive_secrets_and_challenge(shared_secret.as_bytes(), loc_is_least);
+        let kdf = Kdf::derive_secrets_and_challenge(&transcript_hash.extract(), loc_is_least);
 
         // Construct SecretConnection.
         let mut sc = SecretConnection {
