@@ -16,7 +16,7 @@ use subtle_encoding::hex;
 const LENGTH: usize = 20;
 
 /// Account IDs
-#[derive(Copy, Clone, Hash)]
+#[derive(Copy, Clone, Hash, PartialEq, PartialOrd)]
 pub struct Id([u8; LENGTH]);
 
 impl Id {
