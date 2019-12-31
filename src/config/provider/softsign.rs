@@ -7,6 +7,7 @@ use crate::{
 };
 use serde::Deserialize;
 use std::{
+    fmt::{self, Display},
     path::{Path, PathBuf},
     str::FromStr,
 };
@@ -54,10 +55,27 @@ pub enum KeyFormat {
     Json,
 }
 
+impl KeyFormat {
+    /// Get a string reference describing this key format
+    pub fn as_str(&self) -> &str {
+        match self {
+            KeyFormat::Raw => "raw",
+            KeyFormat::Base64 => "base64",
+            KeyFormat::Json => "json",
+        }
+    }
+}
+
 impl Default for KeyFormat {
     fn default() -> Self {
         // TODO(tarcieri): change to Base64
         KeyFormat::Raw
+    }
+}
+
+impl Display for KeyFormat {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 

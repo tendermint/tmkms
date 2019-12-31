@@ -51,7 +51,10 @@ pub fn init(
         let signer = Signer::new(SigningProvider::Yubihsm, consensus_pubkey, Box::new(signer));
 
         for chain_id in &config.chain_ids {
-            chain_registry.add_to_keyring(chain_id, signer.clone())?;
+            chain_registry
+                .get_chain_mut(chain_id)?
+                .keyring
+                .add_ed25519(signer.clone())?;
         }
     }
 

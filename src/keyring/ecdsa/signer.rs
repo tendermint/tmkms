@@ -1,15 +1,16 @@
-//! Ed25519 signer
+//! ECDSA (secp256k1) signer
 
+use super::Signature;
 use crate::{
     error::{Error, ErrorKind::*},
     keyring::SigningProvider,
     prelude::*,
 };
-use signatory::{ed25519::Signature, signature};
+use signatory::signature;
 use std::sync::Arc;
 use tendermint::TendermintKey;
 
-/// Trait object wrapper for an Ed25519 signers
+/// Trait object wrapper for ECDSA signers
 #[derive(Clone)]
 pub struct Signer {
     /// Provider for this signer
@@ -23,7 +24,7 @@ pub struct Signer {
 }
 
 impl Signer {
-    /// Create a new signer
+    /// Create a new ECDSA signer
     pub fn new(
         provider: SigningProvider,
         public_key: TendermintKey,

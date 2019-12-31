@@ -1585,6 +1585,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "secp256k1"
+version = "0.17.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2932dc07acd2066ff2e3921a4419606b220ba6cd03a9935123856cc534877056"
+dependencies = [
+ "secp256k1-sys",
+]
+
+[[package]]
+name = "secp256k1-sys"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7ab2c26f0d3552a0f12e639ae8a64afc2e3db9c52fe32f5fc6c289d38519f220"
+dependencies = [
+ "cc",
+]
+
+[[package]]
 name = "secrecy"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1730,7 +1748,7 @@ version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d98496421006efcfa95f6a9b8822ae9d798447147c07e5d3e175fc047740c3e4"
 dependencies = [
- "secp256k1",
+ "secp256k1 0.15.5",
  "signatory 0.18.0",
  "signature",
 ]
@@ -2507,6 +2525,7 @@ dependencies = [
  "pbkdf2",
  "ring",
  "rusb",
+ "secp256k1 0.17.2",
  "serde",
  "serde_json",
  "sha2",

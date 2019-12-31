@@ -3,7 +3,6 @@
 use super::{Chain, Guard, Id};
 use crate::{
     error::{Error, ErrorKind::*},
-    keyring,
     prelude::*,
 };
 use once_cell::sync::Lazy;
@@ -17,25 +16,6 @@ pub static REGISTRY: Lazy<GlobalRegistry> = Lazy::new(GlobalRegistry::default);
 pub struct Registry(BTreeMap<Id, Chain>);
 
 impl Registry {
-    /// Add a key to a keyring for a chain stored in the registry
-    pub fn add_to_keyring(
-        &mut self,
-        chain_id: &Id,
-        signer: keyring::ed25519::Signer,
-    ) -> Result<(), Error> {
-        // TODO(tarcieri):
-        let chain = self.0.get_mut(chain_id).ok_or_else(|| {
-            format_err!(
-                InvalidKey,
-                "can't add signer {} to unregistered chain: {}",
-                signer.provider(),
-                chain_id
-            )
-        })?;
-
-        chain.keyring.add(signer)
-    }
-
     /// Register a `Chain` with the registry
     pub fn register_chain(&mut self, chain: Chain) -> Result<(), Error> {
         let chain_id = chain.id;
@@ -51,6 +31,18 @@ impl Registry {
     /// Get information about a particular chain ID (if registered)
     pub fn get_chain(&self, chain_id: &Id) -> Option<&Chain> {
         self.0.get(chain_id)
+    }
+
+    /// Get a mutable reference to the given chain
+    pub(crate) fn get_chain_mut(&mut self, chain_id: &Id) -> Result<&mut Chain, Error> {
+        self.0.get_mut(chain_id).ok_or_else(|| {
+            format_err!(
+                InvalidKey,
+                "can't add signer to unregistered chain: {}",
+                chain_id
+            )
+            .into()
+        })
     }
 }
 

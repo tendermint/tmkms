@@ -194,7 +194,7 @@ impl Session {
         let chain = registry.get_chain(&self.config.chain_id).unwrap();
 
         Ok(Response::PublicKey(PubKeyResponse::from(
-            *chain.keyring.default_pubkey()?,
+            *chain.keyring.default_ed25519_pubkey()?,
         )))
     }
 
