@@ -1,3 +1,9 @@
+# 🚨 DEPRECATED 🚨 
+
+This repo has been deprecated. Development work continues in [iqlusioninc/tmkms](https://github.com/iqlusioninc/tmkms). Please reference that repository in the future.
+
+-------
+
 # Tendermint KMS 🔐
 
 [![Crate][crate-image]][crate-link]
